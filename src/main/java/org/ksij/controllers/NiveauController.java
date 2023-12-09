@@ -76,4 +76,14 @@ public class NiveauController {
         nv.cours = fichier;
         return Response.ok().build();
     }
+
+    @DELETE
+    @Path("{id}")
+    //@Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
+    @Transactional
+    public Response supprimerUnCour( @PathParam("id") Long id, byte[] fichier){
+        Niveau.deleteById(id);
+        return Response.ok().build();
+    }
 }
