@@ -60,4 +60,12 @@ public class InfosController {
         return Response.ok().build();
     }
 
+    @GET
+    @Path("photo/{id}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public byte[] getPhotoEvenement(@PathParam("id") Long id) {
+        Infos e = Infos.findById(id);
+        return e.photo;
+    }
+
 }

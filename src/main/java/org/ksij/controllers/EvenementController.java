@@ -58,4 +58,12 @@ public class EvenementController {
         return Response.ok().build();
     }
 
+    @GET
+    @Path("photo/{id}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public byte[] getPhotoEvenement(@PathParam("id") Long id) {
+        Evenement e = Evenement.findById(id);
+        return e.photo;
+    }
+
 }

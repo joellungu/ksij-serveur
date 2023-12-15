@@ -61,4 +61,13 @@ public class CalendrierController {
         //
     }
 
+    @DELETE
+    @Path("/{id}")
+    @Transactional
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response supprimerCal(@PathParam("id") Long id) {
+        Calendrier.deleteById(id);
+        return  Response.ok().build();
+    }
+
 }
