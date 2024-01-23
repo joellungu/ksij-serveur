@@ -1,23 +1,36 @@
 package org.ksij.controllers;
 
 
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.ksij.models.EvenNotification;
+import org.ksij.models.Token;
 import org.ksij.models.evenements.Evenement;
 import org.ksij.models.infos.Infos;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 @Path("infos")
 public class InfosController {
 
+    @Inject
+    EvenNotification evenNotification;
+
     @GET
     @Path("all")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Infos> getAllEvenement() {
-        return Infos.listAll();
+        List<Infos> infos = Infos.listAll();
+        infos.forEach((e)->{
+            //
+            e.photo = new byte[0];
+        });
+        return infos;
     }
 
     @POST
@@ -26,6 +39,25 @@ public class InfosController {
     @Transactional
     public Response saveEvenement(Infos infos){
         infos.persist();
+        //
+        List<Token> tokens = Token.listAll();
+        //
+        try {
+            HashMap<String, String> e = new HashMap<>();
+            e.put("id", ""+infos.id);
+            e.put("titre", ""+infos.titre);
+            e.put("contenu", ""+infos.contenu);
+            e.put("auteur", ""+infos.auteur);
+            e.put("dateTime", ""+infos.dateTime);
+            e.put("sousTitre", ""+infos.sousTitre);
+            e.put("asPhoto", ""+infos.asPhoto);
+            //e.put("id", ""+evenement.);
+
+
+            evenNotification.verification(e);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
         return Response.ok().build();
     }
 
