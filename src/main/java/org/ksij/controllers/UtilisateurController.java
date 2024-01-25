@@ -74,7 +74,7 @@ public class UtilisateurController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
     public Response deleteEvenement(@PathParam("id") Long id){
-        boolean r =  Priere.deleteById(id);
+        boolean r =  Utilisateur.deleteById(id);
         if(!r){
             return Response.serverError().build();
         }
