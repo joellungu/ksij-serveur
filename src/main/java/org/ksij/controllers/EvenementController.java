@@ -5,8 +5,11 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.ksij.models.EvenNotification;
+import org.ksij.models.Fichier;
 import org.ksij.models.Token;
 import org.ksij.models.evenements.Evenement;
+import org.ksij.models.infos.Infos;
+import org.ksij.models.niveau.Cours;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -27,6 +30,7 @@ public class EvenementController {
         events.forEach((e)->{
             //
             e.photo = new byte[0];
+            //e.pdf = new byte[0];
         });
         return events;
     }
@@ -40,7 +44,7 @@ public class EvenementController {
         //
 
         //
-        List<Token> tokens = Token.listAll();
+        //List<Token> tokens = Token.listAll();
         //
         try {
             HashMap<String, String> e = new HashMap<>();
@@ -51,15 +55,17 @@ public class EvenementController {
             e.put("dateTime", ""+evenement.dateTime);
             e.put("sousTitre", ""+evenement.sousTitre);
             e.put("asPhoto", ""+evenement.asPhoto);
+            e.put("asPdf", ""+evenement.asPdf);
+            e.put("topic", "evenement");
             //e.put("id", ""+evenement.);
 
 
             evenNotification.verification(e);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
         //
-        return Response.ok().build();
+        return Response.ok(evenement.id).build();
     }
 
     @PUT
@@ -78,6 +84,30 @@ public class EvenementController {
         evenement1.dateTime = evenement.dateTime;
 
         return Response.ok().build();
+    }
+
+    @POST
+    @Path("fichier/{id}")
+    //@Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
+    @Transactional
+    public Response saveFile( @PathParam("id") Long id, byte[] fichier){
+        Fichier nv = new Fichier();
+        //.findById(id);
+        nv.idFichier = id;
+        nv.fichier = fichier;
+        nv.persist();
+        return Response.ok().build();
+    }
+
+    @GET
+    @Path("fichier/{id}")
+    //@Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
+    @Transactional
+    public Response getFile( @PathParam("id") Long id){
+        Fichier nv = Fichier.find("idFichier",id).firstResult();
+        return Response.ok(nv.fichier).build();
     }
 
     @DELETE
@@ -123,6 +153,7 @@ public class EvenementController {
             e.put("dateTime", "dateTime");
             e.put("sousTitre", "sousTitre");
             e.put("asPhoto", "asPhoto");
+            e.put("topic", "evenement");
             //
             evenNotification.verification(e);
         } catch (IOException e) {

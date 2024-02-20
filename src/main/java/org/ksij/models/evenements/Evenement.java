@@ -20,5 +20,9 @@ public class Evenement extends PanacheEntity {
     public boolean asPhoto;
     public byte[] photo;
 
+    @Column(name="asPdf", columnDefinition = "boolean default false")
+    public boolean asPdf;
+    //public byte[] pdf;
+
 
 }

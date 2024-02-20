@@ -96,7 +96,42 @@ public class EvenNotification {
                 .putData("contenu", notification.get("contenu"))
                 .putData("dateTime", notification.get("dateTime"))
                 .putData("asPhoto", String.valueOf(notification.get("asPhoto")))
-                .setTopic("test")
+                .setTopic(notification.get("topic"))
+                //.setTopic("test")
+                //.setToken(token)q
+                .build();
+
+        // Send a message to the device corresponding to the provided
+        // registration token.
+        String response = null;
+        try {
+            response = FirebaseMessaging.getInstance().send(message);
+        } catch (FirebaseMessagingException e) {
+            throw new RuntimeException(e);
+        }
+        // Response is a message ID string.
+        System.out.println("Successfully sent message: " + response);
+        //
+    }
+    public void rappel(HashMap<String, String> notification) throws IOException {
+
+        Notification.Builder builder = Notification.builder();
+        System.out.println("le topic: "+notification.get("topic"));
+
+        // See documentation on defining a message payload.
+        Message message = Message.builder()
+                .setNotification(builder
+                        .setTitle(notification.get("titre"))
+                        .setBody(notification.get("contenu"))
+                        .build())
+
+                //putData("id", notification.get("id"))
+                .putData("titre", notification.get("titre"))
+                .putData("contenu", notification.get("contenu"))
+                //.putData("dateTime", notification.get("dateTime"))
+                //.putData("asPhoto", String.valueOf(notification.get("asPhoto")))
+                .setTopic(notification.get("topic"))
+                //.setTopic("test")
                 //.setToken(token)q
                 .build();
 

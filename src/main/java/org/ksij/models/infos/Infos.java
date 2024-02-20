@@ -17,4 +17,8 @@ public class Infos extends PanacheEntity {
     @Column(name="asPhoto", columnDefinition = "boolean default false")
     public boolean asPhoto;
     public byte[] photo;
+
+    @Column(name="asPdf", columnDefinition = "boolean default false")
+    public boolean asPdf;
+    //public byte[] pdf;
 }

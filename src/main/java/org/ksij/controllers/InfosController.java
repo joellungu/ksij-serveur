@@ -7,6 +7,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.ksij.models.EvenNotification;
+import org.ksij.models.Fichier;
 import org.ksij.models.Token;
 import org.ksij.models.evenements.Evenement;
 import org.ksij.models.infos.Infos;
@@ -51,6 +52,8 @@ public class InfosController {
             e.put("dateTime", ""+infos.dateTime);
             e.put("sousTitre", ""+infos.sousTitre);
             e.put("asPhoto", ""+infos.asPhoto);
+            e.put("asPdf", ""+infos.asPdf);
+            e.put("topic", "nouvel");
             //e.put("id", ""+evenement.);
 
 
@@ -58,7 +61,7 @@ public class InfosController {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-        return Response.ok().build();
+        return Response.ok(infos.id).build();
     }
 
     @PUT
@@ -77,6 +80,33 @@ public class InfosController {
         infos1.dateTime = infos.dateTime;
 
         return Response.ok().build();
+    }
+
+    @POST
+    @Path("fichier/{id}")
+    //@Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
+    @Transactional
+    public Response saveFile( @PathParam("id") Long id, byte[] fichier){
+        //Infos nv = Infos.findById(id);
+        Fichier nv = new Fichier();
+        nv.idFichier = id;
+        nv.fichier = fichier;
+        nv.persist();
+        //nv.pdf = fichier;
+        return Response.ok().build();
+    }
+
+    @GET
+    @Path("fichier/{id}")
+    //@Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
+    @Transactional
+    public Response getFile( @PathParam("id") Long id){
+        //
+        Fichier nv = Fichier.find("idFichier",id).firstResult();
+
+        return Response.ok(nv.fichier).build();
     }
 
     @DELETE
